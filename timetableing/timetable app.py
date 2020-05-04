@@ -191,7 +191,7 @@ def counsellorMenu():
                                    tristatevalue=0)
     addStudentChoice.grid(column=1, row=1)
 
-    editStudentChoice = Radiobutton(counsellorMenu, text="Edit student info", variable=counsellorMenuChoice, value=7,
+    editStudentChoice = Radiobutton(counsellorMenu, text="Search student info", variable=counsellorMenuChoice, value=7,
                                     tristatevalue=0)
     editStudentChoice.grid(column=1, row=2)
 
@@ -291,8 +291,41 @@ def printAllStudents():
     with open("students.txt", "r") as students:
         rd = csv.reader(students, delimiter=',')
 
+        studentList = []
+
         for line in rd:
-            print('Student Number: ', line[0], 'Student Name: ', line[1], 'Grade: ', line[2])
+            studentInfo = [line[0], line[1], line[2]]
+            studentList.append(studentInfo)
+
+        studentListLength = len(studentList)
+
+        # built in sort
+        def takeName(element):
+            return element[1].upper()
+
+        studentList.sort(key=takeName)
+
+        # # selection sort
+        # for i in range(studentListLength):
+        #     minimum_index = i
+        #
+        #     for j in range(i + 1, studentListLength):
+        #         if studentList[minimum_index][1].upper() > studentList[j][1].upper():
+        #             minimum_index = j
+        #
+        #     studentList[i], studentList[minimum_index] = studentList[minimum_index], studentList[i]
+
+        # # bubble sort
+        #
+        # for i in range(studentListLength - 1):
+        #
+        #     for j in range(0, studentListLength - i - 1):
+        #         if studentList[j][1].upper() > studentList[j + 1][1].upper():
+        #             studentList[j][1], studentList[j + 1][1] = studentList[j + 1][1], studentList[j][1]
+
+        for i in studentList:
+            print('Student Name: ', i[1], 'Student Number: ', i[0], 'Grade: ', i[2])
+
     return
 
 
@@ -312,8 +345,68 @@ def addStudent():
     return
 
 
+def searchStudent():
+    # def binarySearch(studentList, lowerBound, upperBound, searchInput):  # binary search function
+    #
+    #     if upperBound >= lowerBound:
+    #
+    #         middleElement = lowerBound + (upperBound - lowerBound) // 2
+    #
+    #         if searchInput == studentList[middleElement][1]:
+    #             return middleElement
+    #
+    #         elif searchInput < studentList[middleElement][1]:
+    #             return binarySearch(studentList, lowerBound, middleElement - 1, searchInput)
+    #
+    #         else:
+    #             return binarySearch(studentList, middleElement + 1, upperBound, searchInput)
+    #
+    #     else:
+    #         return 1
+
+    with open("students.txt", "r") as students:
+        rd = csv.reader(students, delimiter=',')
+
+        studentList = []
+
+        for line in rd:
+            studentInfo = [line[0], line[1], line[2]]
+            studentList.append(studentInfo)
+
+    # sort list
+    def takeName(element):
+        return element[1].upper()
+
+    studentList.sort(key=takeName)
+
+    print('Input the name of the student you want to search.')
+    searchInput = input()
+
+    # # binary sort
+    # result = binarySearch(studentList, 0, len(studentList) - 1, searchInput)
+    #
+    # if result != 1:
+    #     print('Student Name: ', studentList[result][1], 'Student Number: ', studentList[result][0], 'Grade: ',
+    #           studentList[result][2])
+    # else:
+    #     print('Student not found.')
+
+    # linear search
+    found = 0
+
+    for i in studentList:
+        if i[1].upper() == searchInput.upper():
+            print('Student Name: ', i[1], 'Student Number: ', i[0], 'Grade: ', i[2])
+            found = 1
+    if found != 1:
+        print('Student not found.')
+
+    return
+
+
 def removeStudent():
-    number = input('input the student number of the student you want to remove.')
+    print('input the student number of the student you want to remove.')
+    number = input()
 
     with open("students.txt", "r") as students:
         lines = students.readlines()
@@ -344,48 +437,6 @@ def changeCourse():
     return
 
 
-''''
-def counsellorMenuWindow():
-    window = tk.Tk()
-
-    v = tk.IntVar()
-
-    window.title("Timetabling App")
-    window.geometry('1024x512')
-
-    text = tk.Label(window, text='What do you want to do?', fg="red").pack()
-
-    tk.Radiobutton(window, text='View all courses', variable=v, value=1, tristatevalue=0).pack(anchor=tk.W)
-    tk.Radiobutton(window, text='Create new course', variable=v, value=2, tristatevalue=0).pack(anchor=tk.W)
-    tk.Radiobutton(window, text='Edit a course', variable=v, value=3, tristatevalue=0).pack(anchor=tk.W)
-    tk.Radiobutton(window, text='Delete a course', variable=v, value=4, tristatevalue=0).pack(anchor=tk.W)
-    tk.Radiobutton(window, text='View all students', variable=v, value=5, tristatevalue=0).pack(anchor=tk.W)
-    tk.Radiobutton(window, text='Add student', variable=v, value=6, tristatevalue=0).pack(anchor=tk.W)
-    tk.Radiobutton(window, text='Edit student info', variable=v, value=7, tristatevalue=0).pack(anchor=tk.W)
-    tk.Radiobutton(window, text='Remove a student', variable=v, value=8, tristatevalue=0).pack(anchor=tk.W)
-
-    window.mainloop()
-    return
-
-
-mainMenuWindow = tk.Tk()
-
-v = tk.IntVar()
-
-mainMenuWindow.title("Timetabling App")
-mainMenuWindow.geometry('1024x512')
-
-textMainMenu = tk.Label(mainMenuWindow, text='Are you are guidance counsellor or a student?', fg="red").pack()
-
-tk.Radiobutton(mainMenuWindow, text='I am a counsellor', variable=v, value=1, tristatevalue=0, command=counsellorMenuWindow) \
-    .pack(anchor=tk.W)
-tk.Radiobutton(mainMenuWindow, text='I am a student', variable=v, value=2, tristatevalue=0).pack(anchor=tk.W)
-
-mainMenuWindow.mainloop()
-'''
-# main menu
-
-
 while True:
     menuChoice = mainMenu()
     if menuChoice == 1:
@@ -405,7 +456,7 @@ while True:
             elif counsellorMenuChoice == 6:
                 addStudent()
             elif counsellorMenuChoice == 7:
-                print('edit student')
+                searchStudent()
             elif counsellorMenuChoice == 8:
                 removeStudent()
             elif counsellorMenuChoice == 9:
@@ -426,3 +477,13 @@ while True:
                 break
     elif menuChoice == 3:
         sys.exit()
+
+# In the youtube video, several sorting methods are shown visually, however the examples given have varying amounts of
+# data points. Although it helps demonstrate the algorithms, it does not provide an accurate representation of the
+# efficiency of each methods, as each some methods are sorting less than 100 elements, while others sort a lot more.
+#
+# linear search worked better for me because it allowed me to find multiple students with the same name, whereas using
+# binary search limited me to finding one student only.
+#
+# Also, binary sort requires your elements to be sorted first, while linear search does not. This means it much easier
+# to implement linear search.
